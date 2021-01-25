@@ -23,10 +23,9 @@ jobs:
               --template-file bucket.yml \
               --stack-name "${CIRCLE_WORKFLOW_ID:0:7}" \
               --parameter-overrides PipelineID="${CIRCLE_WORKFLOW_ID:0:7}"
-      - destroy_environment
 
 workflows:
   cci_workflow:
     jobs:
-      - create_infrastructure
+      - create_and_deploy_front_end:
           context: udacity-items
