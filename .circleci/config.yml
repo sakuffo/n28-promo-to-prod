@@ -21,8 +21,8 @@ jobs:
             UDA_S3_STACK_NAME="saa-${CIRCLE_WORKFLOW_ID:0:7}"
             aws cloudformation deploy \
               --template-file bucket.yml \
-              --stack-name saa-"${UDA_S3_STACK_NAME}" \
-              --parameter-overrides NAME=saa-"${UDA_S3_STACK_NAME}"
+              --stack-name "${UDA_S3_STACK_NAME}" \
+              --parameter-overrides NAME="${UDA_S3_STACK_NAME}"
   get_last_deployment_id:
     docker:
       - image: amazon/aws-cli
@@ -30,8 +30,10 @@ jobs:
       - checkout
       - run: mkdir -p workspace
       - run:
-          name: Clean Up Previous Stack
+          name: Get Previous PipelinID
           command: |
+            sudo yum update
+            sudo yum install tar
             aws cloudformation \
             list-exports --query "Exports[?Name==\`PipelineID\`].Value" \
             --no-paginate --output text > workspace/export_file
@@ -59,7 +61,7 @@ jobs:
       - attach_workspace:
           at: /tmp/workspace/
       - run:
-          name: Clean Up
+          name: Clean Up Previous Stack
           command: |
             PreviousPipelineID=$(cat /tmp/workspace/export_file)
             aws s3 rm "s3://${PreviousPipelineID}" --recursive
