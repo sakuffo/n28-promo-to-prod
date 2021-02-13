@@ -21,8 +21,8 @@ jobs:
           command: |
             aws cloudformation deploy \
               --template-file bucket.yml \
-              --stack-name "${UDA_S3_STACK_NAME}" \
-              --parameter-overrides NAME="${UDA_S3_STACK_NAME}"
+              --stack-name p"${CIRCLE_WORKFLOW_ID:0:7}"\
+              --parameter-overrides NAME=p"${CIRCLE_WORKFLOW_ID:0:7}"
   get_last_deployment_id:
     docker:
       - image: amazon/aws-cli
