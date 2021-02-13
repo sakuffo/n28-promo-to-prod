@@ -25,15 +25,15 @@ jobs:
               --parameter-overrides NAME="${UDA_S3_STACK_NAME}"
   get_last_deployment_id:
     docker:
-      - image: amazon/aws-cli
+      - image: circleci/aws-cli
     steps:
       - checkout
       - run: mkdir -p workspace
       - run:
           name: Get Previous PipelinID
           command: |
-            yum update -y
-            yum install tar -y
+            # yum update -y
+            # yum install tar -y
             aws cloudformation \
             list-exports --query "Exports[?Name==\`PipelineID\`].Value" \
             --no-paginate --output text > workspace/export_file
