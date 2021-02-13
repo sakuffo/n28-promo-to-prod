@@ -7,7 +7,7 @@ commands:
       - run:
           name: Destroy environment
           command: |
-            aws cloudformation delete-stack --stack-name "${CIRCLE_WORKFLOW_ID:0:7}"
+            aws cloudformation delete-stack --stack-name p"${CIRCLE_WORKFLOW_ID:0:7}"
           when: on_fail
 
 jobs:
@@ -19,7 +19,7 @@ jobs:
       - run:
           name: Create Stack
           command: |
-            UDA_S3_STACK_NAME="${CIRCLE_WORKFLOW_ID:0:7}"
+            UDA_S3_STACK_NAME=p"${CIRCLE_WORKFLOW_ID:0:7}"
             aws cloudformation deploy \
               --template-file bucket.yml \
               --stack-name "${UDA_S3_STACK_NAME}" \
