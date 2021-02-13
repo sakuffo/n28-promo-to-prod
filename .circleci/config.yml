@@ -18,27 +18,28 @@ jobs:
       - run:
           name: Create Stack
           command: |
-            export STACK_NAME=saa-"${CIRCLE_WORKFLOW_ID:0:7}"
-            echo $MY_ENV_VAR 
+            export UDA_S3_STACK_NAME=saa-"${CIRCLE_WORKFLOW_ID:0:7}" 
             aws cloudformation deploy \
               --template-file bucket.yml \
-              --stack-name $STACK_NAME \
-              --parameter-overrides NAME=$STACK_NAME
+              --stack-name $UDA_S3_STACK_NAME \
+              --parameter-overrides NAME=$UDA_S3_STACK_NAME
+  clean_up_old_front_end:
+    docker:
+      - image: amazon/aws-cli
+    steps:
+      - checkout
+      - run:
+          name: Clean Up Previous Stack
+          command: |
+            aws cloudformation \
+            list-export --query "Exports[?Name==\`Pipeline\`].Value" \
+            --no-paginate --output text > export_file
+            cat export_file
     
-  # create_and_deploy_front_end:
-  #   docker:
-  #     - image: amazon/aws-cli
-  #   steps:
-  #     - checkout
-  #     - run:
-  #         name: Create Stack
-  #         command: |
-  #           aws cloudformation deploy \
-  #             --template-file bucket.yml \
-  #             --stack-name ${CIRCLE_WORKFLOW_ID:0:7} \
-  #             --parameter-overrides PipelineID=${CIRCLE_WORKFLOW_ID:0:7},NAME=TheBigTest
 
+# workflow
 workflows:
   cci_workflow:
     jobs:
       - create_and_deploy_front_end
+      - clean_up_old_front_end
