@@ -28,7 +28,9 @@ Resources:
           ViewerProtocolPolicy: allow-all
 
 Outputs:
-  PipelineIDOut:
+  PipelineID:
     Value: !Sub ${PipelineID}
     Export:
       Name: PipelineID
+  PageLink:
+    Value: !GetAtt WebpageCDN.DomainName
