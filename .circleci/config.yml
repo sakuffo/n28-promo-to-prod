@@ -32,8 +32,8 @@ jobs:
       - run:
           name: Get Previous PipelinID
           command: |
-            yum update
-            yum install tar
+            yum update -y
+            yum install tar -y
             aws cloudformation \
             list-exports --query "Exports[?Name==\`PipelineID\`].Value" \
             --no-paginate --output text > workspace/export_file
