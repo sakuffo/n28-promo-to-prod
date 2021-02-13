@@ -18,7 +18,7 @@ jobs:
       - run:
           name: Create Stack
           command: |
-            export UDA_S3_STACK_NAME=saa-"${CIRCLE_WORKFLOW_ID:0:7}" 
+            UDA_S3_STACK_NAME=saa-"${CIRCLE_WORKFLOW_ID:0:7}" 
             aws cloudformation deploy \
               --template-file bucket.yml \
               --stack-name $UDA_S3_STACK_NAME \
@@ -32,10 +32,22 @@ jobs:
           name: Clean Up Previous Stack
           command: |
             aws cloudformation \
-            list-export --query "Exports[?Name==\`Pipeline\`].Value" \
+            list-exports --query "Exports[?Name==\`PipelineID\`].Value" \
             --no-paginate --output text > export_file
             cat export_file
-    
+  promote_to_production:
+    docker:
+      - image: amazon/aws-cli
+    steps:
+    - checkout:
+    - run:
+        name: Promote to Production
+        command: |
+        echo $UDA_S3_STACK_NAME
+        aws cloudformation deploy \
+          --template-file cloudfront.yml \
+          --stack-name production-distro \
+          --parameter-overrides PipelineID="${UDA_S3_STACK_NAME}"
 
 # workflow
 workflows:
