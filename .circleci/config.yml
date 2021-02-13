@@ -15,7 +15,8 @@ commands:
 
 jobs:
   create_and_deploy_front_end:
-    executor: amazon/aws-cli
+    docker:
+      - image: amazon/aws-cli
     steps:
       - checkout
       - run:
@@ -27,8 +28,7 @@ jobs:
               --stack-name "${UDA_S3_STACK_NAME}" \
               --parameter-overrides NAME="${UDA_S3_STACK_NAME}"
   get_last_deployment_id:
-    docker:
-      - image: aws-cli/default
+    executor: aws-cli/default
     steps:
       - checkout
       - run: mkdir -p workspace
