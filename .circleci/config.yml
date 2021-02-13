@@ -39,15 +39,15 @@ jobs:
     docker:
       - image: amazon/aws-cli
     steps:
-    - checkout:
+    - checkout
     - run:
         name: Promote to Production
         command: |
-        echo $UDA_S3_STACK_NAME
-        aws cloudformation deploy \
-          --template-file cloudfront.yml \
-          --stack-name production-distro \
-          --parameter-overrides PipelineID="${UDA_S3_STACK_NAME}"
+          echo $UDA_S3_STACK_NAME
+          aws cloudformation deploy \
+            --template-file cloudfront.yml \
+            --stack-name production-distro \
+            --parameter-overrides PipelineID="${UDA_S3_STACK_NAME}"
 
 # workflow
 workflows:
