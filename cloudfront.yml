@@ -2,15 +2,15 @@ Parameters:
   PipelineID:
     Description: Unique identifier
     Type: String
+    Default: saa-udapeople-manuel
 
 Resources:
-
   CloudFrontOriginAccessIdentity:
     Type: "AWS::CloudFront::CloudFrontOriginAccessIdentity"
     Properties:
       CloudFrontOriginAccessIdentityConfig:
-        Comment: Origin Access Identitiy for Serverless Static Website
-  
+        Comment: Origin Access Identity for Serverless Static Website
+
   WebpageCDN:
     Type: AWS::CloudFront::Distribution
     Properties:
@@ -29,7 +29,7 @@ Resources:
           ViewerProtocolPolicy: allow-all
 
 Outputs:
-  PipelineID:
+  PipelineIDOut:
     Value: !Sub ${PipelineID}
     Export:
       Name: PipelineID
