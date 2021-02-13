@@ -1,8 +1,5 @@
 # Use the latest 2.1 version of CircleCI pipeline process engine. See: https://circleci.com/docs/2.0/configuration-reference
 version: 2.1
-
-orbs:
-  aws-cli: circleci/aws-cli@x.y
   
 commands:
   destroy_environment:
@@ -10,7 +7,7 @@ commands:
       - run:
           name: Destroy environment
           command: |
-            aws cloudformation delete-stack --stack-name saa-${CIRCLE_WORKFLOW_ID:0:7}
+            aws cloudformation delete-stack --stack-name "${CIRCLE_WORKFLOW_ID:0:7}"
           when: on_fail
 
 jobs:
@@ -22,19 +19,22 @@ jobs:
       - run:
           name: Create Stack
           command: |
-            UDA_S3_STACK_NAME="saa-${CIRCLE_WORKFLOW_ID:0:7}"
+            UDA_S3_STACK_NAME="${CIRCLE_WORKFLOW_ID:0:7}"
             aws cloudformation deploy \
               --template-file bucket.yml \
               --stack-name "${UDA_S3_STACK_NAME}" \
               --parameter-overrides NAME="${UDA_S3_STACK_NAME}"
   get_last_deployment_id:
-    executor: aws-cli/default
+    docker:
+      - image: amazon/aws-cli
     steps:
       - checkout
       - run: mkdir -p workspace
       - run:
           name: Get Previous PipelinID
           command: |
+            yum install tar -y
+            yum install gzip -y
             aws cloudformation \
             list-exports --query "Exports[?Name==\`PipelineID\`].Value" \
             --no-paginate --output text > workspace/export_file
