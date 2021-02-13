@@ -20,8 +20,8 @@ jobs:
           command: |
             aws cloudformation deploy \
               --template-file bucket.yml \
-              --stack-name "${CIRCLE_WORKFLOW_ID:0:7}" \
-              --parameter-overrides NAME="${CIRCLE_WORKFLOW_ID:0:7}"
+              --stack-name $CIRCLE_WORKFLOW_ID \
+              --parameter-overrides NAME=$CIRCLE_WORKFLOW_ID
     
   # create_and_deploy_front_end:
   #   docker:
