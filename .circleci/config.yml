@@ -18,12 +18,12 @@ jobs:
       - run:
           name: Create Stack
           command: |
-            export MY_ENV_VAR="${CIRCLE_WORKFLOW_ID:0:7}"
+            export STACK_NAME=saa-"${CIRCLE_WORKFLOW_ID:0:7}"
             echo $MY_ENV_VAR 
             aws cloudformation deploy \
               --template-file bucket.yml \
-              --stack-name $MY_ENV_VAR \
-              --parameter-overrides NAME=$MY_ENV_VAR
+              --stack-name $STACK_NAME \
+              --parameter-overrides NAME=$STACK_NAME
     
   # create_and_deploy_front_end:
   #   docker:
